@@ -1,5 +1,5 @@
 import json
-from authlib.integrations.django_client import OAuth
+from authlib.integrations.django_client import OAuth #!ignore 
 from django.conf import settings
 from django.shortcuts import redirect, render, redirect
 from django.urls import reverse
