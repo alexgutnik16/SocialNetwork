@@ -5,13 +5,13 @@ from django.contrib.auth.models import User
 class SNUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    photo = models.ImageField(upload_to='uploads/avatars/', null=True)
+    photo = models.ImageField(upload_to='uploads/avatars/', blank=True)
     phone_number = models.CharField(max_length=12)
 
-    videos = models.ManyToManyField('Video')
-    subscribtions = models.ManyToManyField('Subscription')
-    black_list = models.ManyToManyField('Ban')
-    likes = models.ManyToManyField('Like')
+    videos = models.ManyToManyField('Video', blank=True)
+    subscribtions = models.ManyToManyField('Subscription', blank=True)
+    black_list = models.ManyToManyField('Ban', blank=True)
+    likes = models.ManyToManyField('Like', blank=True)
 
     def __str__(self):
         return f'{self.user.username}'
@@ -24,8 +24,8 @@ class Video(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
 
     author = models.ForeignKey(SNUser, on_delete=models.CASCADE)
-    comments = models.ManyToManyField('Comment', related_name="Comments")
-    likes = models.ManyToManyField('Like')
+    comments = models.ManyToManyField('Comment', blank=True, related_name="Comments")
+    likes = models.ManyToManyField('Like', blank=True)
 
     def __str__(self):
         return f'{self.heading}'
