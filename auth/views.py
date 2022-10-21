@@ -5,6 +5,14 @@ from django.shortcuts import redirect, render, redirect
 from django.urls import reverse
 from urllib.parse import quote_plus, urlencode
 
+from network.models import SNUser
+
+
+
+# def verify_phone(request):
+#     return render(request, 'verify_phone.html')
+
+
 oauth = OAuth()
 
 oauth.register(
@@ -19,7 +27,6 @@ oauth.register(
 
 
 def index(request):
-
     return render(
         request,
         "index.html",
@@ -33,6 +40,15 @@ def index(request):
 def callback(request):
     token = oauth.auth0.authorize_access_token(request)
     request.session["user"] = token
+    userinfo = request.session.get("user")['userinfo']
+    userExists = False
+    for snuser in SNUser.objects.all():
+        if userinfo['nickname'] == snuser.nickname:
+            userExists = True
+            break
+    if not userExists:
+        SNUser.objects.create(nickname=userinfo['nickname'], mail=userinfo['email'])
+        
     return redirect(request.build_absolute_uri(reverse("index")))
 
 

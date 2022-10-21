@@ -1,12 +1,14 @@
+from unittest.util import _MAX_LENGTH
 from django.db import models
 from django.contrib.auth.models import User
 
 
 class SNUser(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    nickname = models.CharField(max_length=16)
+    mail = models.CharField(max_length=32)
 
     photo = models.ImageField(upload_to='uploads/avatars/', blank=True)
-    phone_number = models.CharField(max_length=12)
+    phone_number = models.CharField(max_length=16, blank=True)
 
     videos = models.ManyToManyField('Video', blank=True)
     subscribtions = models.ManyToManyField('Subscription', blank=True)
@@ -14,7 +16,7 @@ class SNUser(models.Model):
     likes = models.ManyToManyField('Like', blank=True)
 
     def __str__(self):
-        return f'{self.user.username}'
+        return f'{self.nickname}'
 
 
 class Video(models.Model):
