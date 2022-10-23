@@ -8,11 +8,6 @@ from urllib.parse import quote_plus, urlencode
 from network.models import SNUser
 
 
-
-# def verify_phone(request):
-#     return render(request, 'verify_phone.html')
-
-
 oauth = OAuth()
 
 oauth.register(
