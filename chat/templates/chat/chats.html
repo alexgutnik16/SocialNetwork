@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Chat</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+</head>
+
+<body>
+    <h1>Chats</h1>
+    {% for chat in chats %}
+    <h3>{{ chat.name }}</h3>
+    <a href="{% url 'chat' chat.name %}">Enter chat</a> {% endfor %}
+</body>
+
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Chat: {{ chat.name }}</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+</head>
+
+<body>
+    <h1>{{ chat.name }}</h1>
+    <h3>{{ user }}</h3>
+
+    <form id="form">
+        <input type="text" name="message" />
+    </form>
+
+    <div id="messages">
+        {% for message in messages %}
+        <p>{{ message.user.nickname }}</p>
+        <h3>{{ message.text }}</h3>
+        {% endfor %}
+    </div>
+
+    {{ chat.name|json_script:"json-roomname" }} {{ user.nickname|json_script:"json-username" }}
+
+    <script type="text/javascript">
+        const userName = JSON.parse(document.getElementById('json-username').textContent)
+        const roomName = JSON.parse(document.getElementById('json-roomname').textContent)
+
+        let url = `ws://${window.location.host}/ws/${roomName}/`
+
+        const chatSocket = new WebSocket(url)
+
+        chatSocket.onmessage = function(e) {
+            let data = JSON.parse(e.data)
+            console.log('Data: ', data)
+
+            if (data.message) {
+                let messages = document.getElementById('messages')
+                messages.insertAdjacentHTML('beforeend', `<div>
+                    <p>${data.username}</p>
+                    <p>${data.message}</p>
+                    </div>`)
+            }
+        }
+
+        chatSocket.onclose = function(e) {
+            console.log('onclose')
+        }
+
+        let form = document.getElementById('form')
+        form.addEventListener('submit', (e) => {
+            e.preventDefault()
+            let message = e.target.message.value
+            chatSocket.send(JSON.stringify({
+                'message': message,
+                'username': userName,
+                'chat': roomName
+            }))
+            form.reset()
+        })
+
+        // let form = document.getElementById('form')
+        // form.onclick = function(e) {
+        //     e.preventDefault()
+        //     const message = e.target.message.value
+
+        //     chatSocket.send(JSON.stringify({
+        //         'message': message,
+        //         'username': userName,
+        //         'chat': roomName
+        //     }))
+        //     form.reset()
+
+        //     return false;
+        // }
+    </script>
+</body>
+
+</html>
