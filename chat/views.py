@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from ast import Delete
+from django.shortcuts import render, redirect
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -16,8 +17,10 @@ def get_current_user(request):
 
 
 def chats(request):
-    all_chats = Chat.objects.all() 
-    return render(request, 'chat/chats.html', {'chats': all_chats})
+    user = get_current_user(request=request)
+    joined_chats = Chat.objects.filter(chat_members=user)
+    new_chats = Chat.objects.exclude(chat_members=user)
+    return render(request, 'chat/chats.html', {'chats': joined_chats,  'new_chats': new_chats, 'user': user})
 
 
 def lobby(request, name):
@@ -26,6 +29,22 @@ def lobby(request, name):
     user = get_current_user(request=request)
     return render(request, 'chat/lobby.html', {'chat': chat, 'messages': messages, 'user': user})
 
+
+def add_to_chat(request, name):
+    chat = Chat.objects.get(name=name)
+    chat_members = chat.chat_members
+    user = get_current_user(request=request)
+    chat_members.add(user)
+    return redirect(f'/chat/{name}/')
+
+
+def leave_chat(request, name):
+    chat = Chat.objects.get(name=name)
+    chat_members = chat.chat_members
+    user = get_current_user(request=request)
+    chat_members.remove(user)
+    return redirect(f'/chat/')
+    
 
 # @api_view(['GET'])
 # def get_messages(request, name):

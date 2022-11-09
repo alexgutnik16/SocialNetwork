@@ -12,7 +12,11 @@
     <h1>Chats</h1>
     {% for chat in chats %}
     <h3>{{ chat.name }}</h3>
-    <a href="{% url 'chat' chat.name %}">Enter chat</a> {% endfor %}
+    <a href="{% url 'chat' chat.name %}">Go to chat</a> {% endfor %}
+    <h1>Join new chats</h1>
+    {% for chat in new_chats %}
+    <h3>{{ chat.name }}</h3>
+    <a href="{% url 'join_chat' chat.name %}">Join chat</a> {% endfor %}
 </body>
 
 </html>

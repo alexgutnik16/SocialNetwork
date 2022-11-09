@@ -23,7 +23,7 @@
         {% endfor %}
     </div>
 
-    {{ chat.name|json_script:"json-roomname" }} {{ user.nickname|json_script:"json-username" }}
+    <a href="{% url 'leave_chat' chat.name %}">Leave chat</a> {{ chat.name|json_script:"json-roomname" }} {{ user.nickname|json_script:"json-username" }}
 
     <script type="text/javascript">
         const userName = JSON.parse(document.getElementById('json-username').textContent)

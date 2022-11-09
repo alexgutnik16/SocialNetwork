@@ -4,6 +4,11 @@ from network.models import SNUser
 
 class Chat(models.Model):
     name = models.CharField(max_length=16)
+    chat_members = models.ManyToManyField(SNUser, blank=True)
+
+    def save(self, *args, **kwargs):
+        self.name = self.name.replace(" ", "_")
+        super(Chat, self).save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.name}'
