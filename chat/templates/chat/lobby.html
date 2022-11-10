@@ -9,6 +9,7 @@
 </head>
 
 <body>
+    <h1>Test template</h1>
     <h1>{{ chat.name }}</h1>
     <h3>{{ user }}</h3>
 
@@ -18,8 +19,7 @@
 
     <div id="messages">
         {% for message in messages %}
-        <p>{{ message.user.nickname }}</p>
-        <h3>{{ message.text }}</h3>
+        <p>{{ message.user.nickname }}: {{ message.text }}</p>
         {% endfor %}
     </div>
 
@@ -61,21 +61,6 @@
             }))
             form.reset()
         })
-
-        // let form = document.getElementById('form')
-        // form.onclick = function(e) {
-        //     e.preventDefault()
-        //     const message = e.target.message.value
-
-        //     chatSocket.send(JSON.stringify({
-        //         'message': message,
-        //         'username': userName,
-        //         'chat': roomName
-        //     }))
-        //     form.reset()
-
-        //     return false;
-        // }
     </script>
 </body>
 
