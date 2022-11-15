@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
 
 from .models import Chat, Message
+from .tasks import notify_message_not_read
 from network.models import SNUser, Subscription
 
+from datetime import datetime
 
 def get_current_user(request):
     username = request.session.get("user")['userinfo']['nickname']
@@ -15,6 +17,12 @@ def chats(request):
     joined_chats = Chat.objects.filter(chat_members=user)
     new_chats = Chat.objects.exclude(chat_members=user)
     sub_to = Subscription.objects.filter(subscriber=user)
+
+    test = Message.objects.get(id=1)
+    print('date -', test.creation_date.strftime("%H:%M:%S"))
+    time_now = datetime.now().strftime("%H:%M:%S")
+    print(time_now)
+
     return render(request, 'chat/chats.html', {
         'chats': joined_chats,
         'new_chats': new_chats,
@@ -27,6 +35,12 @@ def lobby(request, name):
     chat = Chat.objects.get(name=name)
     messages = Message.objects.filter(chat=chat)
     user = get_current_user(request=request)
+
+    other_user_messages = Message.objects.filter(chat=chat).exclude(user=user)
+    for message in other_user_messages.all():
+        message.is_read = True
+        message.save()
+
     return render(request, 'chat/lobby.html', {'chat': chat, 'messages': messages, 'user': user})
 
 

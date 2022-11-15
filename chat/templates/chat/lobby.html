@@ -19,7 +19,8 @@
 
     <div id="messages">
         {% for message in messages %}
-        <p>{{ message.user.nickname }}: {{ message.text }}</p>
+        <p>{{ message.user.nickname }}: {{ message.text }} ({{ message.is_read }})</p>
+        <p>{{ message.creation_date }}</p>
         {% endfor %}
     </div>
 
@@ -40,8 +41,7 @@
             if (data.message) {
                 let messages = document.getElementById('messages')
                 messages.insertAdjacentHTML('beforeend', `<div>
-                    <p>${data.username}</p>
-                    <p>${data.message}</p>
+                    <p>${data.username}: ${data.message}</p>
                     </div>`)
             }
         }

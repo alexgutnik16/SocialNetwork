@@ -13,7 +13,7 @@
     <h1>Direct message to user</h1>
     {% for subscribtion in sub_to %}
     <a href="{% url 'create_dm_chat' subscribtion.subscribed_to.nickname %}">{{ subscribtion.subscribed_to.nickname }}</a> {% endfor %}
-    <h1>Chats</h1>
+    <h1>My chats</h1>
     {% for chat in chats %}
     <h3>{{ chat.name }}</h3>
     <a href="{% url 'chat' chat.name %}">Go to chat</a> {% endfor %}
