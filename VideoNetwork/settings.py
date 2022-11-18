@@ -45,11 +45,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'channels',
+    'webpush',
     'rest_framework',
     'corsheaders',
     'social_django',
     'network',
-    'chat'
+    'chat.apps.ChatConfig'
 ]
 
 ASGI_APPLICATION = 'VideoNetwork.asgi.application'
@@ -182,9 +183,18 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
+
 # e-mails
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = 'alexvgutnik'
 EMAIL_HOST_PASSWORD = 'giczax-webvYr-tezte2'
 EMAIL_USE_SSL = True
+
+
+# Webpush
+WEBPUSH_SETTINGS = {
+    "VAPID_PUBLIC_KEY": "BJQ-H_xsM2VKeNNtjXfmO4VpFoPewyECXtVBiTCmhiBteM8I9iFqtyl5KyRBWcqP19OMKIbkW4HCofQOw9qwKBM",
+    "VAPID_PRIVATE_KEY": "TAaVmZmfcAmjxOj-7SjGyvwzm54ZIG4j1_V2pJeCpN4",
+    "VAPID_ADMIN_EMAIL": "alexvgutnik@gmail.com"
+}

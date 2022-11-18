@@ -31,3 +31,7 @@ def notify_message_not_read():
                 )
                 
     print("Hello, world!")
+
+
+def new_message(instance):
+    pass
