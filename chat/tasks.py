@@ -33,5 +33,7 @@ def notify_message_not_read():
     print("Hello, world!")
 
 
+@shared_task
 def new_message(instance):
-    pass
+    message = instance.text[:20] + '...'
+    print(message)
