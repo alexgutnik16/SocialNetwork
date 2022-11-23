@@ -188,7 +188,7 @@ CELERY_RESULT_SERIALIZER = 'json'
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = 'alexvgutnik'
-EMAIL_HOST_PASSWORD = 'giczax-webvYr-tezte2'
+EMAIL_HOST_PASSWORD = os.environ.get("YANDEX_PASSWORD")
 EMAIL_USE_SSL = True
 
 
