@@ -6,6 +6,9 @@ from django.urls import reverse
 from urllib.parse import quote_plus, urlencode
 
 from network.models import SNUser
+from network.views import get_current_user
+from .forms import VerifyForm, PhoneCreationForm
+from . import verify
 
 
 oauth = OAuth()
@@ -43,7 +46,7 @@ def callback(request):
             break
     if not userExists:
         SNUser.objects.create(nickname=userinfo['nickname'], mail=userinfo['email'])
-        
+        return redirect('/add_number')
     return redirect(request.build_absolute_uri(reverse("index")))
 
 
@@ -66,3 +69,31 @@ def logout(request):
             quote_via=quote_plus,
         ),
     )
+
+def add_number(request):
+    if request.method == 'POST':
+        form = PhoneCreationForm(request.POST)
+        if form.is_valid():
+            user = get_current_user(request=request)
+            user.phone_number = form.cleaned_data.get('phone')
+            user.save()
+            verify.send(form.cleaned_data.get('phone'))
+            return redirect('/verify')
+    else:
+        form = PhoneCreationForm()
+    return render(request, 'add_number.html', {'form': form})
+
+
+def verify_code(request):
+    if request.method == 'POST':
+        form = VerifyForm(request.POST)
+        if form.is_valid():
+            code = form.cleaned_data.get('code')
+            user = get_current_user(request=request)
+            if verify.check(user.phone_number, code):
+                user.verified = True
+                user.save()
+                return redirect('index')
+    else:
+        form = VerifyForm()
+    return render(request, 'verify.html', {'form': form})

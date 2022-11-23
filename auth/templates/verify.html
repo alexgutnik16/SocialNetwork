@@ -1,0 +1,16 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Verify phone number</title>
+</head>
+
+<body>
+    <h1>Verify your phone number</h1>
+    <form method="post">
+        {% csrf_token %} {{ form.as_p }}
+        <button type="submit">Verify</button>
+    </form>
+</body>
+
+</html>

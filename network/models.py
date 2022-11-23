@@ -8,6 +8,7 @@ class SNUser(models.Model):
 
     photo = models.ImageField(upload_to='uploads/avatars/', blank=True)
     phone_number = models.CharField(max_length=16, blank=True)
+    verified = models.BooleanField(default=False)
 
     videos = models.ManyToManyField('Video', blank=True)
     subscribtions = models.ManyToManyField('Subscription', blank=True)

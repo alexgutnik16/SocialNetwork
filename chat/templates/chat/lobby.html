@@ -11,6 +11,8 @@
 <body>
     <h1>Test template</h1>
     <h1>{{ chat.name }}</h1>
+    {% for user in chat.chat_members.all %}
+    <p>{{ user.nickname }}</p> {% endfor %}
     <h3>{{ user }}</h3>
 
     <form id="form">

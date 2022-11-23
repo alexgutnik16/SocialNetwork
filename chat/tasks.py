@@ -2,7 +2,7 @@ from celery import shared_task
 from datetime import datetime, timedelta
 from django.core.mail import send_mail
 
-from .models import Message
+from .models import Message, Chat
 
 
 @shared_task
@@ -17,20 +17,18 @@ def notify_message_not_read():
         message_created = message.creation_date.strftime(date_time_format)
         message_created_date = datetime.strptime(message_created, date_time_format)
         delta = time_now_date - message_created_date
-        print(delta)
 
-        # print(delta.seconds + delta.days * 86400)
+        if (delta.days) < 1:
+            chat = message.chat
+            users = chat.chat_members.filter().exclude(nickname=message.user.nickname)
+            for user in users.all():
 
-        if (delta.days) > 1:            
-            user = message.user
-            send_mail(
-                subject=f'Здравствуйте, {user.nickname}. У вас больше суток не прочитано сообщение в чате {message.chat.name}!',
-                message=f'Перейти в чат {message.chat.name}: http://127.0.0.1:8000/chat/{message.chat.name}',
-                from_email='alexvgutnik@yandex.ru',
-                recipient_list=[user.mail],
+                send_mail(
+                    subject=f'Здравствуйте, {user.nickname}. У вас больше суток не прочитано сообщение в чате {message.chat.name}!',
+                    message=f'Перейти в чат {message.chat.name}: http://127.0.0.1:8000/chat/{message.chat.name}',
+                    from_email='alexvgutnik@yandex.ru',
+                    recipient_list=[user.mail],
                 )
-                
-    print("Hello, world!")
 
 
 @shared_task

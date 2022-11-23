@@ -1,0 +1,16 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Add phone number</title>
+</head>
+
+<body>
+    <h1>Add phone number</h1>
+    <form method="post">
+        {% csrf_token %} {{ form.as_p }}
+        <button type="submit">Send code</button>
+    </form>
+</body>
+
+</html>
