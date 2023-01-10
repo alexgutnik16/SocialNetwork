@@ -50,7 +50,9 @@ INSTALLED_APPS = [
     'corsheaders',
     'social_django',
     'network',
-    'chat.apps.ChatConfig'
+    'chat.apps.ChatConfig',
+    # 'django_auth0_toolkit',
+    # 'auth0'
 ]
 
 ASGI_APPLICATION = 'VideoNetwork.asgi.application'

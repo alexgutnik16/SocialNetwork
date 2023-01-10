@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from drf_writable_nested.serializers import WritableNestedModelSerializer
 from .models import *
 
 
@@ -9,19 +10,23 @@ class UserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class VideoSerializer(serializers.ModelSerializer):
-    author = UserSerializer()
-
-    class Meta:
-        model = Video
-        fields = '__all__'
-
-
 class CommentSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
 
     class Meta:
         model = Comment
         fields = '__all__'
+        # fields = ['text', 'creation_date', 'video', 'user']
+    
+
+class VideoSerializer(serializers.ModelSerializer):
+    author = UserSerializer()
+    comments = CommentSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Video
+        # fields = '__all__'
+        fields = ['id', 'video', 'heading', 'text', 'creation_date', 'author', 'comments', 'likes']
 
 
 class LikeSerializer(serializers.ModelSerializer):

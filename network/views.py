@@ -7,6 +7,7 @@ from .serializers import *
 
 
 def get_current_user(request):
+    print('request', request.session.get("user"))
     username = request.session.get("user")['userinfo']['nickname']
     user = SNUser.objects.get(nickname=username)
     return user
@@ -88,7 +89,8 @@ def get_video(request, video_id):
 def get_comments(request, video_id):
     if request.method == 'GET':
         try:
-            comments = Comment.objects.filter(id=video_id)
+            video = Video.objects.get(id=video_id)
+            comments = Comment.objects.filter(video=video)
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         serializer = CommentSerializer(comments, many=True)
