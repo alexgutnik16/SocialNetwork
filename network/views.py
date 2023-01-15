@@ -7,7 +7,7 @@ from .serializers import *
 
 
 def get_current_user(request):
-    print('request', request.session.get("user"))
+    print('request', request.session.get("user")['userinfo']['nickname'])
     username = request.session.get("user")['userinfo']['nickname']
     user = SNUser.objects.get(nickname=username)
     return user
