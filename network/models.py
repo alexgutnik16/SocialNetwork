@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import FileExtensionValidator
 
 
 class SNUser(models.Model):
@@ -20,7 +21,12 @@ class SNUser(models.Model):
 
 
 class Video(models.Model):
-    video = models.FileField(upload_to='uploads/videos')
+    video = models.FileField(upload_to='uploads/videos', validators=[
+            FileExtensionValidator(
+                allowed_extensions=["MOV", "avi", "mp4", "webm", "mkv"]
+            )
+        ]
+    )
     heading = models.CharField(max_length=128)
     text = models.TextField(max_length=1024)
     creation_date = models.DateTimeField(auto_now_add=True)

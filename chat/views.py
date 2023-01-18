@@ -11,7 +11,8 @@ from network.models import SNUser, Subscription
 
 
 def get_current_user(request):
-    username = request.session.get("user")['userinfo']['nickname']
+    # username = request.session.get("user")['userinfo']['nickname']
+    username = 'Alex'
     user = SNUser.objects.get(nickname=username)
     return user
 

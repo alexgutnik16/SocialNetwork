@@ -30,6 +30,7 @@ class VideoSerializer(serializers.ModelSerializer):
 
 
 class LikeSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
 
     class Meta:
         model = Like
@@ -37,6 +38,8 @@ class LikeSerializer(serializers.ModelSerializer):
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):
+    subscriber = UserSerializer()
+    subscribed_to = UserSerializer()
 
     class Meta:
         model = Subscription
@@ -44,6 +47,8 @@ class SubscriptionSerializer(serializers.ModelSerializer):
 
 
 class BanSerializer(serializers.ModelSerializer):
+    banned_by = UserSerializer()
+    banned = UserSerializer()
 
     class Meta:
         model = Ban

@@ -7,10 +7,23 @@ from .serializers import *
 
 
 def get_current_user(request):
-    print('request', request.session.get("user")['userinfo']['nickname'])
-    username = request.session.get("user")['userinfo']['nickname']
+    # print('request', request.session.get("user")['userinfo']['nickname'])
+    # username = request.session.get("user")['userinfo']['nickname']
+    print(request)
+    username = 'Alex'
     user = SNUser.objects.get(nickname=username)
     return user
+
+
+@api_view(['GET'])
+def api_get_current_user(request):
+    if request.method == 'GET':
+        try:
+            user = get_current_user(request=request)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer = UserSerializer(user)
+        return Response({'data': serializer.data})
 
 
 @api_view(['GET'])
@@ -57,7 +70,7 @@ def get_rec_videos(request):
 
     elif request.method == 'POST':
         video = Video()
-        video.video = request.data['video']
+        video.video = request.FILES.get('video')
         video.heading = request.data['heading']
         video.text = request.data['text']
         video.author = get_current_user(request=request)
@@ -178,14 +191,37 @@ def get_subscribtions(request, username):
         return Response({'data': serializer.data})
 
     if request.method == 'POST':
-        if user != get_current_user():
+        if user != get_current_user(request=request):
             subscription = Subscription()
             subscription.subscriber = get_current_user(request=request)
             subscription.subscribed_to = user
             subscription.save()
             return Response(status=status.HTTP_200_OK)
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)      
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', 'POST'])
+def get_subscribed(request, username):
+    try:
+        user = SNUser.objects.get(nickname=username)
+        subscriptions = Subscription.objects.filter(subscribed_to=user)
+    except:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == 'GET':
+        serializer = SubscriptionSerializer(subscriptions, many=True)
+        return Response({'data': serializer.data})
+
+    if request.method == 'POST':
+        if user != get_current_user(request=request):
+            subscription = Subscription()
+            subscription.subscriber = get_current_user(request=request)
+            subscription.subscribed_to = user
+            subscription.save()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST) 
 
 
 @api_view(['GET', 'DELETE'])
@@ -221,7 +257,7 @@ def get_bans(request, username):
         return Response({'data': serializer.data})
 
     if request.method == 'POST':
-        if user != get_current_user():
+        if user != get_current_user(request=request):
             ban = Ban()
             ban.banned_by = get_current_user(request=request)
             ban.banned = user
